@@ -105,7 +105,7 @@ class App extends React.Component {
         ];
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDate = new Date();
-        const date = `${days[currentDate.getDay()]} ${currentDate.getDate()} ${
+        const date = `${days[currentDate.getDay()]}, ${currentDate.getDate()} ${
           months[currentDate.getMonth()]
         }`;
         const sunset = new Date(data1.sys.sunset * 1000).toLocaleTimeString().slice(0, 5);

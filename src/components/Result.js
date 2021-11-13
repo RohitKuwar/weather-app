@@ -165,7 +165,7 @@ const Result = ({ weather }) => {
           <SmallLabel align="center" weight="400">
             {Math.floor(highestTemp)}&#176;
           </SmallLabel>
-          <Text align="center">Hight</Text>
+          <Text align="center">Highest Temp</Text>
         </WeatherDetail>
         <WeatherDetail>
           <SmallLabel align="center" weight="400">
@@ -183,13 +183,13 @@ const Result = ({ weather }) => {
           <SmallLabel align="center" weight="400">
             {Math.floor(lowestTemp)}&#176;
           </SmallLabel>
-          <Text align="center">Low</Text>
+          <Text align="center">Lowest Temp</Text>
         </WeatherDetail>
         <WeatherDetail>
           <SmallLabel align="center" weight="400">
             {humidity}%
           </SmallLabel>
-          <Text align="center">Rain</Text>
+          <Text align="center">Humidity</Text>
         </WeatherDetail>
         <WeatherDetail>
           <SmallLabel align="center" weight="400">
