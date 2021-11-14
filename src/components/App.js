@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+// import { DotenvConfigOptions } from 'dotenv';
 import SearchCity from './SearchCity';
 import device from '../responsive/Device';
 import Result from './Result';
@@ -76,10 +77,8 @@ class App extends React.Component {
   handleSearchCity = e => {
     e.preventDefault();
     const { value } = this.state;
-    const APIkey = '93cab34e7811ec1a8d5570371f5235e9';
-
-    const weather = `https://api.openweathermap.org/data/2.5/weather?q=${value}&APPID=${APIkey}&units=metric`;
-    const forecast = `https://api.openweathermap.org/data/2.5/forecast?q=${value}&APPID=${APIkey}&units=metric`;
+    const weather = `https://api.openweathermap.org/data/2.5/weather?q=${value}&APPID=${process.env.REACT_APP_API_KEY}&units=metric`;
+    const forecast = `https://api.openweathermap.org/data/2.5/forecast?q=${value}&APPID=${process.env.REACT_APP_API_KEY}&units=metric`;
 
     Promise.all([fetch(weather), fetch(forecast)])
       .then(([res1, res2]) => {
