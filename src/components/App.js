@@ -14,8 +14,6 @@ const AppTitle = styled.h1`
   text-transform: uppercase;
   font-weight: 400;
   color: black;
-  transition: 0.3s 1.4s;
-  opacity: ${({ showLabel }) => (showLabel ? 1 : 0)};
 
   ${({ secondary }) =>
     secondary &&
