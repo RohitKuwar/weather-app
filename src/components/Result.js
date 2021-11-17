@@ -113,7 +113,8 @@ const Result = ({ weather }) => {
   const {
     city,
     country,
-    date,
+    currentDate,
+    currentTime,
     description,
     main,
     temp,
@@ -149,7 +150,8 @@ const Result = ({ weather }) => {
         <BigLabel>
           {city}, {country}
         </BigLabel>
-        <SmallLabel weight="400">{date}</SmallLabel>
+        <SmallLabel weight="400">{currentDate}</SmallLabel>
+        <SmallLabel weight="400">{currentTime}</SmallLabel>
       </LocationWrapper>
       <CurrentWeatherWrapper>
         <WeatherIcon>{weatherIcon}</WeatherIcon>

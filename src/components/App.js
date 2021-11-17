@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-// import { DotenvConfigOptions } from 'dotenv';
 import SearchCity from './SearchCity';
 import device from '../responsive/Device';
 import Result from './Result';
@@ -103,17 +102,27 @@ class App extends React.Component {
           'December',
         ];
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const currentDate = new Date();
-        const date = `${days[currentDate.getDay()]}, ${currentDate.getDate()} ${
-          months[currentDate.getMonth()]
+        let h = new Date().getHours()
+        let m = new Date().getMinutes()
+        let session = 'AM'
+        if (h > 12) {
+          h = h - 12
+          session = 'PM'
+        }
+        h = h < 10 ? '0' + h : h
+        m = m < 10 ? '0' + m : m
+        const currentTime = h + ':' + m + ' ' + session
+        const currentDate = `${days[new Date().getDay()]}, ${new Date().getDate()} ${
+          months[new Date().getMonth()]
         }`;
-        const sunset = new Date(data1.sys.sunset * 1000).toLocaleTimeString().slice(0, 5);
-        const sunrise = new Date(data1.sys.sunrise * 1000).toLocaleTimeString().slice(0, 5);
+        const sunset = new Date(data1.sys.sunset * 1000).getHours() + ':' + new Date(data1.sys.sunset * 1000).getMinutes();
+        const sunrise = new Date(data1.sys.sunrise * 1000).getHours() + ':' + new Date(data1.sys.sunrise * 1000).getUTCMinutes();
 
         const weatherInfo = {
           city: data1.name,
           country: data1.sys.country,
-          date,
+          currentDate,
+          currentTime,
           description: data1.weather[0].description,
           main: data1.weather[0].main,
           temp: data1.main.temp,
