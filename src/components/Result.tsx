@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,6 +15,24 @@ import ResultFadeIn from './ResultFadeIn';
 import BigLabel from './BigLabel';
 import SmallLabel from './SmallLabel';
 import Text from './Text';
+
+type ResultProps = {
+  weather: {
+    city: string
+    country: string
+    currentDate: string
+    currentTime: string
+    description: string
+    main: string
+    temp: number
+    sunset: string
+    sunrise: string
+    humidity: string
+    wind: string
+    highestTemp: number
+    lowestTemp: number
+  };
+};
 
 const Results = styled.div`
   display: flex;
@@ -109,36 +126,21 @@ const WeatherDetail = styled.div`
   }
 `;
 
-const Result = ({ weather }) => {
-  const {
-    city,
-    country,
-    currentDate,
-    currentTime,
-    description,
-    main,
-    temp,
-    sunset,
-    sunrise,
-    humidity,
-    wind,
-    highestTemp,
-    lowestTemp,
-  } = weather;
+const Result = ({ weather }: ResultProps) => {
 
-  let weatherIcon = null;
+  let weatherIcon: any = null;
 
-  if (main === 'Thunderstorm') {
+  if (weather.main === "Thunderstorm") {
     weatherIcon = <FontAwesomeIcon icon={faBolt} />;
-  } else if (main === 'Drizzle') {
+  } else if (weather.main === "Drizzle") {
     weatherIcon = <FontAwesomeIcon icon={faCloudRain} />;
-  } else if (main === 'Rain') {
+  } else if (weather.main === "Rain") {
     weatherIcon = <FontAwesomeIcon icon={faCloudShowersHeavy} />;
-  } else if (main === 'Snow') {
+  } else if (weather.main === "Snow") {
     weatherIcon = <FontAwesomeIcon icon={faSnowflake} />;
-  } else if (main === 'Clear') {
+  } else if (weather.main === "Clear") {
     weatherIcon = <FontAwesomeIcon icon={faSun} />;
-  } else if (main === 'Clouds') {
+  } else if (weather.main === "Clouds") {
     weatherIcon = <FontAwesomeIcon icon={faCloud} />;
   } else {
     weatherIcon = <FontAwesomeIcon icon={faSmog} />;
@@ -148,56 +150,56 @@ const Result = ({ weather }) => {
     <Results>
       <LocationWrapper>
         <BigLabel>
-          {city}, {country}
+          {weather.city}, {weather.country}
         </BigLabel>
-        <SmallLabel weight="400">{currentDate}</SmallLabel>
-        <SmallLabel weight="400">{currentTime}</SmallLabel>
+        <SmallLabel weight='400'>{weather.currentDate}</SmallLabel>
+        <SmallLabel weight='400'>{weather.currentTime}</SmallLabel>
       </LocationWrapper>
       <CurrentWeatherWrapper>
         <WeatherIcon>{weatherIcon}</WeatherIcon>
         <TemperatureWrapper>
-          <Temperature>{Math.floor(temp)}&#176;</Temperature>
-          <SmallLabel weight="400" firstToUpperCase>
-            {description}
+          <Temperature>{Math.floor(weather.temp)}&#176;</Temperature>
+          <SmallLabel weight='400' firstToUpperCase>
+            {weather.description}
           </SmallLabel>
         </TemperatureWrapper>
       </CurrentWeatherWrapper>
       <WeatherDetailsWrapper>
         <WeatherDetail>
-          <SmallLabel align="center" weight="400">
-            {Math.floor(highestTemp)}&#176;
+          <SmallLabel align='center' weight='400'>
+            {Math.floor(weather.highestTemp)}&#176;
           </SmallLabel>
-          <Text align="center">Highest Temp</Text>
+          <Text align='center'>Highest Temp</Text>
         </WeatherDetail>
         <WeatherDetail>
-          <SmallLabel align="center" weight="400">
-            {wind}mph
+          <SmallLabel align='center' weight='400'>
+            {weather.wind}mph
           </SmallLabel>
-          <Text align="center">Wind</Text>
+          <Text align='center'>Wind</Text>
         </WeatherDetail>
         <WeatherDetail>
-          <SmallLabel align="center" weight="400">
-            {sunrise}
+          <SmallLabel align='center' weight='400'>
+            {weather.sunrise}
           </SmallLabel>
-          <Text align="center">Sunrise</Text>
+          <Text align='center'>Sunrise</Text>
         </WeatherDetail>
         <WeatherDetail>
-          <SmallLabel align="center" weight="400">
-            {Math.floor(lowestTemp)}&#176;
+          <SmallLabel align='center' weight='400'>
+            {Math.floor(weather.lowestTemp)}&#176;
           </SmallLabel>
-          <Text align="center">Lowest Temp</Text>
+          <Text align='center'>Lowest Temp</Text>
         </WeatherDetail>
         <WeatherDetail>
-          <SmallLabel align="center" weight="400">
-            {humidity}%
+          <SmallLabel align='center' weight='400'>
+            {weather.humidity}%
           </SmallLabel>
-          <Text align="center">Humidity</Text>
+          <Text align='center'>Humidity</Text>
         </WeatherDetail>
         <WeatherDetail>
-          <SmallLabel align="center" weight="400">
-            {sunset}
+          <SmallLabel align='center' weight='400'>
+            {weather.sunset}
           </SmallLabel>
-          <Text align="center">Sunset</Text>
+          <Text align='center'>Sunset</Text>
         </WeatherDetail>
       </WeatherDetailsWrapper>
     </Results>
