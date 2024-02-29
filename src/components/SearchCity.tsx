@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -67,10 +67,16 @@ const SearchIcon = styled.span`
 `;
 
 const SearchCity = ({ submit, value, change, showResult }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef?.current?.focus();
+  }, []);
+
   return (
     <>
       <SearchBar showResult={showResult} onSubmit={submit}>
-        <SearchInput type="text" value={value} placeholder="Enter city" onChange={change} />
+        <SearchInput type="text" value={value} placeholder="Enter city" onChange={change} ref={inputRef} />
         <SearchIcon>
           <FontAwesomeIcon icon={faSearch} />
         </SearchIcon>
