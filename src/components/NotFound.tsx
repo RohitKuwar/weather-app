@@ -24,7 +24,7 @@ const NotFoundWrapper = styled.div`
 const NotfoundIcon = styled.span`
   display: block;
   text-align: center;
-  color: yellow;
+  color: #c68642;
   font-size: 40px;
   margin-right: 10px;
 `;

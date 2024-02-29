@@ -65,6 +65,117 @@ class App extends React.Component {
     error: false,
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.value !== this.state.value) {
+      if (this.state.value.trim() === "") {
+        this.setState({
+          weatherInfo: null,
+          error: false,
+        });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.getLocationAndWeather();
+  }
+
+  getLocationAndWeather = () => {
+    if (navigator.geolocation) {
+      const options = {
+        enableHighAccuracy: true, // Request high accuracy
+        timeout: 5000, // Timeout in milliseconds (adjust as needed)
+        maximumAge: 0 // Don't use cached location
+      };
+
+      navigator.geolocation.getCurrentPosition(
+        this.handleLocationSuccess,
+        this.handleLocationError,
+        options
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
+
+  handleLocationSuccess = (position) => {
+    const { latitude, longitude } = position.coords;
+    const weather = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${process.env.REACT_APP_API_KEY}&units=metric`;
+
+    fetch(weather)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw Error(res.statusText);
+      })
+      .then((data) => {
+        const currentDateTimes = new Date((data.dt + data.timezone) * 1000)
+        const sunriseTime = new Date((data.sys.sunrise + data.timezone) * 1000)
+        const sunsetTime = new Date((data.sys.sunset + data.timezone) * 1000)
+
+        // const currentDate = currentDateTimes.toLocaleString('en-US', {
+        //   weekday: 'long',
+        //   month: 'long',
+        //   day: 'numeric',
+        //   timeZone: 'UTC',
+        // })
+        const currentDate = `${currentDateTimes.toLocaleString('en-US', { weekday: 'long' })}, ${currentDateTimes.getDate()} ${currentDateTimes.toLocaleString('en-US', { month: 'long' })}`
+        const currentTime = currentDateTimes.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          timeZone: 'UTC',
+        })
+        const sunrise = sunriseTime.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          timeZone: 'UTC',
+        })
+        const sunset = sunsetTime.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          timeZone: 'UTC',
+        })
+          const weatherInfo = {
+            city: data.name,
+            country: data.sys.country,
+            currentDate,
+            currentTime,
+            description: data.weather[0].description,
+            main: data.weather[0].main,
+            temp: data.main.temp,
+            highestTemp: data.main.temp_max,
+            lowestTemp: data.main.temp_min,
+            sunrise,
+            sunset,
+            clouds: data.clouds.all,
+            humidity: data.main.humidity,
+            wind: data.wind.speed
+          };
+        this.setState({
+          weatherInfo,
+          error: false,
+          value: data.name
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+
+        this.setState({
+          error: true,
+          weatherInfo: null,
+        });
+      });
+  };
+
+  handleLocationError = (error) => {
+    console.log("Error getting location:", error);
+    // Handle location error, set error state, etc.
+  };
+
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       value: e.target.value,
@@ -77,7 +188,8 @@ class App extends React.Component {
     const weather = `https://api.openweathermap.org/data/2.5/weather?q=${value}&APPID=${process.env.REACT_APP_API_KEY}&units=metric`;
     // const forecast = `https://api.openweathermap.org/data/2.5/forecast?q=${value}&APPID=${process.env.REACT_APP_API_KEY}&units=metric`;
 
-    fetch(weather)
+    if(value.length >= 2) {
+      fetch(weather)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -85,50 +197,35 @@ class App extends React.Component {
         throw Error(res.statusText);
       })
       .then((data) => {
-        const months = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-        const days = [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ];
-        let h: string | number = new Date().getHours();
-        let m: string | number = new Date().getMinutes();
-        let session = "AM";
-        if (h > 12) {
-          h = h - 12;
-          session = "PM";
-        }
-        h = h < 10 ? "0" + h : h;
-        m = m < 10 ? "0" + m : m;
-        const currentTime = h + ":" + m + " " + session;
-        const currentDate = `${
-          days[new Date().getDay()]
-        }, ${new Date().getDate()} ${months[new Date().getMonth()]}`;
-        const sunset =
-          new Date(data.sys.sunset * 1000).getHours() +
-          ":" +
-          new Date(data.sys.sunset * 1000).getMinutes();
-        const sunrise =
-          new Date(data.sys.sunrise * 1000).getHours() +
-          ":" +
-          new Date(data.sys.sunrise * 1000).getUTCMinutes();
+        const currentDateTimes = new Date((data.dt + data.timezone) * 1000)
+        const sunriseTime = new Date((data.sys.sunrise + data.timezone) * 1000)
+        const sunsetTime = new Date((data.sys.sunset + data.timezone) * 1000)
+
+        // const currentDate = currentDateTimes.toLocaleString('en-US', {
+        //   weekday: 'long',
+        //   month: 'long',
+        //   day: 'numeric',
+        //   timeZone: 'UTC',
+        // })
+        const currentDate = `${currentDateTimes.toLocaleString('en-US', { weekday: 'long' })}, ${currentDateTimes.getDate()} ${currentDateTimes.toLocaleString('en-US', { month: 'long' })}`
+        const currentTime = currentDateTimes.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          timeZone: 'UTC',
+        })
+        const sunrise = sunriseTime.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          timeZone: 'UTC',
+        })
+        const sunset = sunsetTime.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          timeZone: 'UTC',
+        })
 
         const weatherInfo = {
           city: data.name,
@@ -144,7 +241,7 @@ class App extends React.Component {
           sunset,
           clouds: data.clouds.all,
           humidity: data.main.humidity,
-          wind: data.wind.speed,
+          wind: data.wind.speed
         };
         this.setState({
           weatherInfo,
@@ -159,11 +256,14 @@ class App extends React.Component {
           weatherInfo: null,
         });
       });
+    } else {
+      alert('Please enter valid characters more than or equal to 2')
+    }
   };
 
   render() {
     const { value, weatherInfo, error } = this.state;
-    return (
+        return (
       <>
         <AppTitle showLabel={(weatherInfo || error) && true}>
           Weather app
